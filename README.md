@@ -32,7 +32,11 @@ There are nine built in types in the current version of polyscheme:
 - NULL type for the null value (#n or '())
 - BOOLEAN type for true (#t) or false (#f) values.
 
-Types are a first type of object and can be used to associate procedure implementations with a type using `defm` (define method).
+Types can be used to associate procedure implementations with a type of object by defining a method with `defm`. The type acts as an environment that is used just before the global environment when looking up procedures to execute. The type used in a multi-argument call is the type of the first argument. For example, in
+
+    (+ "one" x)
+    
+The type of `"one"` (which is STRING) is used to look up the procedure associated with `+`.
 
 Currently there's no support in polyscheme for creating new types directly in Lisp code, though it can be done in Java. This is the number one *to do* item.
 
@@ -47,7 +51,7 @@ These definitions will not interfere with the `+` and `*` procedures used for nu
 
 ### Indexing and the `acc` procedure
 
-The procedure `acc` acts as both a get function if it has two arguments and a set function if it has three. The built-in version of the function works with integer-indexed objects like vectors and strings as well as symbol-index objects like environments, types, and Java maps. There are also `get` and `put` functions that are simple wrappers around the `acc` function.
+The procedure `acc` acts as both a `get` function if it has two arguments and a `set` function if it has three. The built-in version of the function works with integer-indexed objects like arrays and strings as well as symbol-index objects like environments, types, and Java maps. There are also `get` and `put` functions that are simple wrappers around the `acc` function.
 
     ;; Gets the function used for string concatination
     (acc STRING '+)
@@ -72,7 +76,7 @@ You can reference a java class using it's path. Thus `java.util.Vector` refers t
 
 The above creates two vectors, `v1` is a Java Vector created with the zero-argument constructor and `v2` is created with the constructor that allows an initial capacity to be specified.
 
-Java member or static functions can be called using a '.' before the function name and the object or class (for static function) as the first argument.
+Java member or static functions can be called using a '.' before the function name and the object (or class for static function) as the first argument.
 
     (def v1 (java.lang.Vector))
     (.size v1)   ;; returns 0
@@ -94,7 +98,7 @@ If you have class `myapp.Point` with a public `x` and `y` fields you can get or 
 
 The following are priorities on the todo list for polyscheme:
 
-1. Add the ability to add new types in Lisp code. The exact form of this is still undecided.
+1. The ability to add new types in Lisp code. The exact form of this is still undecided.
 2. Make it easier to add new types in Java code, include an example (probably a hash table).
 3. Allow for `lambda` and `define` as well as `fn` and `def`.
 4. Decent reference documentation.
